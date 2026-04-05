@@ -22,4 +22,4 @@ Esta es una API construida con **Laravel** que sirve como el núcleo central par
 * **Producción:** Hostinger
 
 ---
-*Desarrollado para Spazio Cosmetic.*
+*Desarrollado para Spazio Cosmetica.*
