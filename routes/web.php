@@ -3,19 +3,23 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ResetPasswordController;
 
+// 1. RUTA PRINCIPAL ARREGLADA (Ya no busca la vista "welcome")
 Route::get('/', function () {
-    return view('welcome');
+    return response()->json([
+        'status' => 'success',
+        'message' => 'API de Spazio Cosmetic funcionando correctamente en Hostinger 🚀'
+    ]);
 });
 
-// 1. Ruta para mostrar el formulario (viene del correo)
+// 2. Ruta para mostrar el formulario (viene del correo)
 Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])
     ->name('password.reset');
 
-// 2. Ruta para procesar el guardado de la nueva contraseña
+// 3. Ruta para procesar el guardado de la nueva contraseña
 Route::post('/reset-password', [ResetPasswordController::class, 'reset'])
     ->name('password.store');
 
-// 3. Ruta de éxito (Mensaje final elegante)
+// 4. Ruta de éxito (Mensaje final elegante)
 Route::get('/password-success', function () {
     return '
     <!DOCTYPE html>
@@ -26,7 +30,7 @@ Route::get('/password-success', function () {
         <title>Contraseña Actualizada - Spazio</title>
         <style>
             body {
-                background-color: #F0F4F8; /* Mismo fondo azul grisáceo del correo */
+                background-color: #F0F4F8;
                 font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
                 display: flex;
                 justify-content: center;
@@ -61,7 +65,7 @@ Route::get('/password-success', function () {
                 margin-bottom: 20px;
             }
             .brand {
-                color: #E91E63; /* El rosa de Spazio */
+                color: #E91E63;
                 font-weight: bold;
                 letter-spacing: 0.5px;
             }
@@ -70,7 +74,7 @@ Route::get('/password-success', function () {
                 height: 70px;
                 margin-bottom: 24px;
                 fill: none;
-                stroke: #00C853; /* Verde de éxito */
+                stroke: #00C853;
                 stroke-width: 2.5;
                 stroke-linecap: round;
                 stroke-linejoin: round;
