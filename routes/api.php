@@ -10,7 +10,7 @@ use App\Http\Controllers\Api\AdminProductoController;
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
-| Auth públicas
+| Rutas públicas
 |--------------------------------------------------------------------------
 */
 
@@ -29,9 +29,25 @@ Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']
 
 /*
 |--------------------------------------------------------------------------
+| Catálogo público
+|--------------------------------------------------------------------------
+| Estas rutas son las que está usando Flutter:
+| /api/catalogo/productos
+| /api/catalogo/productos/{id}
+| /api/catalogo/buscar/{nombre}
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/catalogo/productos', [CatalogoController::class, 'listarProductos']);
+Route::get('/catalogo/productos/{id}', [CatalogoController::class, 'productoTest']);
+Route::get('/catalogo/buscar/{nombre}', [CatalogoController::class, 'productoPorNombre']);
+
+/*
+|--------------------------------------------------------------------------
 | Rutas protegidas con Sanctum
 |--------------------------------------------------------------------------
 */
+
 Route::middleware('auth:sanctum')->group(function () {
 
     /*
@@ -39,6 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
     | Usuario autenticado
     |--------------------------------------------------------------------------
     */
+
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
@@ -47,26 +64,23 @@ Route::middleware('auth:sanctum')->group(function () {
     | Usuarios administrativos
     |--------------------------------------------------------------------------
     */
-    Route::post('/admin/usuarios', [AuthController::class, 'createAdministrativeUser']);
+
     Route::get('/admin/usuarios', [AuthController::class, 'listUsers']);
     Route::post('/admin/usuarios', [AuthController::class, 'createAdministrativeUser']);
     Route::post('/admin/usuarios/{id}/estado', [AuthController::class, 'toggleUserStatus']);
-    /*
-    |--------------------------------------------------------------------------
-    | Catálogo desde la BD maestra
-    |--------------------------------------------------------------------------
-    */
-    Route::get('/producto-test/{id}', [CatalogoController::class, 'productoTest']);
-    Route::get('/producto-nombre/{nombre}', [CatalogoController::class, 'productoPorNombre']);
-    Route::get('/productos-master', [CatalogoController::class, 'listarProductos']);
 
     /*
     |--------------------------------------------------------------------------
     | Administración de productos con imágenes y estados
     |--------------------------------------------------------------------------
     */
+
     Route::get('/admin/productos', [AdminProductoController::class, 'listarProductosConImagen']);
     Route::get('/admin/productos/{id}', [AdminProductoController::class, 'detalleProducto']);
     Route::post('/admin/productos/{id}/imagen', [AdminProductoController::class, 'subirImagenProducto']);
     Route::post('/admin/productos/{id}/visibilidad', [AdminProductoController::class, 'cambiarVisibilidad']);
+    Route::put('/admin/productos/imagenes/{id}/precio-final', [AdminProductoController::class, 'actualizarPrecioFinalImagen']);
+    Route::put('/admin/productos/imagenes/{id}/precio-final', [AdminProductoController::class, 'actualizarPrecioFinalImagen']);
+    Route::post('/admin/productos/imagenes/{id}/cambiar-imagen', [AdminProductoController::class, 'cambiarImagenProducto']);
+    
 });

@@ -7,20 +7,44 @@ use Illuminate\Database\Eloquent\Model;
 class Producto extends Model
 {
     protected $connection = 'mysql_master';
+
     protected $table = 'productos';
     protected $primaryKey = 'id_producto';
-    public $incrementing = true;
-    protected $keyType = 'int';
-    public $timestamps = true;
+
+    public $timestamps = false;
 
     protected $fillable = [
-        'id_producto',
         'nombre',
         'descripcion',
         'precio_venta',
-        'stock_minimo',
         'id_categoria',
-        'estado',
-        'genera_comision',
     ];
+
+    public function categoria()
+    {
+        return $this->belongsTo(
+            Categoria::class,
+            'id_categoria',
+            'id_categoria'
+        );
+    }
+
+    public function inventario()
+    {
+        return $this->hasOne(
+            Inventario::class,
+            'producto_id',
+            'id_producto'
+        );
+    }
+
+    // Esta relación apunta a Apinative, porque ProductoImagen usa conexión mysql
+    public function imagenes()
+    {
+        return $this->hasMany(
+            ProductoImagen::class,
+            'producto_master_id',
+            'id_producto'
+        );
+    }
 }

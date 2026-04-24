@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\CustomResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,12 +12,14 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $table = 'users';
+
     protected $fillable = [
         'name',
         'email',
         'password',
         'role',
-        'activo', // NUEVO CAMPO
+        'activo',
     ];
 
     protected $hidden = [
@@ -26,12 +29,43 @@ class User extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'activo' => 'boolean', // Asegura que Laravel lo trate como true/false
+        'activo' => 'boolean',
     ];
 
+    // =========================================================
+    // NOTIFICACIÓN PERSONALIZADA PARA RECUPERAR CONTRASEÑA
+    // =========================================================
     public function sendPasswordResetNotification($token)
     {
-        // Llama a la notificación personalizada que acabamos de crear
-        $this->notify(new \App\Notifications\CustomResetPassword($token));
+        $this->notify(new CustomResetPassword($token));
     }
+
+    // =========================================================
+    // RELACIÓN: UN USUARIO TIENE DATOS DE CLIENTE
+    // =========================================================
+    public function datosCliente()
+    {
+        return $this->hasOne(DatosCliente::class, 'user_id', 'id');
+    }
+
+    // =========================================================
+    // RELACIÓN: UN USUARIO PUEDE TENER VARIOS PEDIDOS
+    // =========================================================
+    public function pedidos()
+    {
+        return $this->hasMany(Pedido::class, 'user_id', 'id');
+    }
+
+    // =========================================================
+    // RELACIÓN: UN USUARIO PUEDE TENER VARIOS CARRITOS
+    // =========================================================
+    public function carritos()
+    {
+        return $this->hasMany(Carrito::class, 'user_id', 'id');
+    }
+    public function carritoActivo()
+{
+    return $this->hasOne(Carrito::class, 'user_id', 'id')
+        ->where('estado', 'activo');
+}
 }
